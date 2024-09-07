@@ -1,1 +1,138 @@
-"<html><head>n    <meta charset="UTF-8">n    <meta name="viewport" content="width=device-width, initial-scale=1.0">n    <title>عرض الرقم</title>n    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">n    <style>n        body, html {n            height: 100%;n            margin: 0;n            display: flex;n            flex-direction: column;n            justify-content: center;n            align-items: center;n            background-color: #000;n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;n            color: white;n            position: relative;n        }nn        #pageLogo {n            width: 200px;n            height: 200px;n            background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDngLM76qX0BmyFDaRxHqXxG2jRbNOPB5NVUwYO-u3F9YFx2aZS3PJ83-XjY9xa4QuqDxbfqIslUv_A9HaMksT0H3YWJ_dnFYPgoJ2tOLFxOBZY6PY0n88sqy87Jc6gK6qFDxFAsSEoQq4qywk1Ti_gfwyDu69oVbHNRZhqbK3E_9Pmp3HtB-v5BwFwrLP/s500/IMG_20240715_152739_879-removebg-preview.png');n            background-size: cover;n            background-position: center;n            position: fixed;n            top: 10px;n            left: 50%;n            transform: translateX(-50%);n            z-index: 2;n        }nn        .content-container {n            text-align: center;n            padding: 30px 20px;n            border-radius: 15px;n            border: 2px solid #4caf50;n            background-color: transparent;n            color: white;n            width: 100%;n            max-width: 500px;n            box-sizing: border-box;n            margin-top: 100px;n            position: relative;n            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);n            z-index: 1;n        }nn        #crashValue {n            font-size: 4em; /* حجم الخط أكبر لتكون أكثر وضوحًا */n            margin: 15px 0;n            padding: 15px;n            color: #ffffff; /* لون النص أبيض */n            line-height: 1.2;n            font-weight: bold; /* الخط عريض */n        }nn        .icon-container {n            position: absolute;n            bottom: 20px;n            width: 100%;n            display: flex;n            justify-content: center;n            gap: 20px; /* المسافة بين الأيقونات */n            z-index: 1;n        }nn        .icon-container a {n            color: #ffffff;n            font-size: 40px; /* حجم الأيقونات أكبر */n            text-decoration: none;n        }nn        .icon-container a:hover {n            color: #4caf50;n        }n    </style>n</head>n<body>n    <div id="pageLogo"></div>n    n    <div class="content-container">n        <div id="crashValue">0.00</div> <!-- الرقم يظهر هنا -->n    </div>n    n    <div class="icon-container">n        <a href="https://www.tiktok.com/@YourTikTokAccount" target="_blank" title="تابعنا على تيك توك"><i class="fab fa-tiktok"></i></a>n        <a href="https://www.youtube.com/YourYouTubeChannel" target="_blank" title="تابعنا على يوتيوب"><i class="fab fa-youtube"></i></a>n        <a href="https://www.facebook.com/YourFacebookPage" target="_blank" title="تابعنا على فيسبوك"><i class="fab fa-facebook-f"></i></a>n    </div>n    n    <script>n        var ws = null;n        var previousValues = [];n        var currentIndex = 0;nn        function openWebSocket() {n            var url = 'wss://coincharger.icu/games-frame/sockets/crash?whence=114&fcountry=66&ref=233&gr=790&appGuid=00000000-0000-0000-0000-000000000000&lng=ar';n            ws = new WebSocket(url);n            n            ws.onopen = function() {n                console.log('WebSocket opened');n                ws.send('{"protocol":"json","version":1}x1e');n                ws.send('{"arguments":[{"activity":30,"currency":119}],"invocationId":"0","target":"Guest","type":1}x1e');n            };n            n            ws.onclose = function() {n                console.log('WebSocket closed');n                ws = null;n            };n            n            ws.onmessage = function(event) {n                var data = JSON.parse(event.data.slice(0, -1));n                if (data.target === 'OnCrash') {n                    previousValues.push(data.arguments[0].f);n                    displayNextValue();n                }n            };n            n            ws.onerror = function(event) {n                console.error('WebSocket error:', event);n            };n        }nn        function displayNextValue() {n            if (currentIndex < previousValues.length) {n                var crashValueElement = document.getElementById('crashValue');n                crashValueElement.innerText = previousValues[currentIndex].toFixed(2); // Ensure the number is formatted to 2 decimal placesn                currentIndex++;n            }n        }nn        openWebSocket();n    </script>nn</body></html>"
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض الرقم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            position: relative;
+        }
+
+        #pageLogo {
+            width: 200px;
+            height: 200px;
+            background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDngLM76qX0BmyFDaRxHqXxG2jRbNOPB5NVUwYO-u3F9YFx2aZS3PJ83-XjY9xa4QuqDxbfqIslUv_A9HaMksT0H3YWJ_dnFYPgoJ2tOLFxOBZY6PY0n88sqy87Jc6gK6qFDxFAsSEoQq4qywk1Ti_gfwyDu69oVbHNRZhqbK3E_9Pmp3HtB-v5BwFwrLP/s500/IMG_20240715_152739_879-removebg-preview.png');
+            background-size: cover;
+            background-position: center;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .content-container {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            border: 2px solid #4caf50;
+            background-color: transparent;
+            color: white;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            margin-top: 100px;
+            position: relative;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        #crashValue {
+            font-size: 4em; /* حجم الخط أكبر لتكون أكثر وضوحًا */
+            margin: 15px 0;
+            padding: 15px;
+            color: #ffffff; /* لون النص أبيض */
+            line-height: 1.2;
+            font-weight: bold; /* الخط عريض */
+        }
+
+        .icon-container {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* المسافة بين الأيقونات */
+            z-index: 1;
+        }
+
+        .icon-container a {
+            color: #ffffff;
+            font-size: 40px; /* حجم الأيقونات أكبر */
+            text-decoration: none;
+        }
+
+        .icon-container a:hover {
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div id="pageLogo"></div>
+    
+    <div class="content-container">
+        <div id="crashValue">0.00</div> <!-- الرقم يظهر هنا -->
+    </div>
+    
+    <div class="icon-container">
+        <a href="https://www.tiktok.com/@YourTikTokAccount" target="_blank" title="تابعنا على تيك توك"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/YourYouTubeChannel" target="_blank" title="تابعنا على يوتيوب"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.facebook.com/YourFacebookPage" target="_blank" title="تابعنا على فيسبوك"><i class="fab fa-facebook-f"></i></a>
+    </div>
+    
+    <script>
+        var ws = null;
+        var previousValues = [];
+        var currentIndex = 0;
+
+        function openWebSocket() {
+            var url = 'wss://coincharger.icu/games-frame/sockets/crash?whence=114&fcountry=66&ref=233&gr=790&appGuid=00000000-0000-0000-0000-000000000000&lng=ar';
+            ws = new WebSocket(url);
+            
+            ws.onopen = function() {
+                console.log('WebSocket opened');
+                ws.send('{"protocol":"json","version":1}\x1e');
+                ws.send('{"arguments":[{"activity":30,"currency":119}],"invocationId":"0","target":"Guest","type":1}\x1e');
+            };
+            
+            ws.onclose = function() {
+                console.log('WebSocket closed');
+                ws = null;
+            };
+            
+            ws.onmessage = function(event) {
+                var data = JSON.parse(event.data.slice(0, -1));
+                if (data.target === 'OnCrash') {
+                    previousValues.push(data.arguments[0].f);
+                    displayNextValue();
+                }
+            };
+            
+            ws.onerror = function(event) {
+                console.error('WebSocket error:', event);
+            };
+        }
+
+        function displayNextValue() {
+            if (currentIndex < previousValues.length) {
+                var crashValueElement = document.getElementById('crashValue');
+                crashValueElement.innerText = previousValues[currentIndex].toFixed(2); // Ensure the number is formatted to 2 decimal places
+                currentIndex++;
+            }
+        }
+
+        openWebSocket();
+    </script>
+</body>
+</html>
